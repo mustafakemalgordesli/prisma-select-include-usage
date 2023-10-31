@@ -2,24 +2,6 @@ import prisma from './lib/prisma';
 
 // Simple Select Usage
 const selectUsage = async () => {
-    console.time('select time');
-    for (let i = 0; i < 100; i++) {
-        await prisma.user.findUnique({
-            where: {
-                id: 1,
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                posts: true,
-            },
-        });
-    }
-    console.timeEnd('select time');
-
-    // 100x runtime: 402.935ms
-
     const user = await prisma.user.findUnique({
         where: {
             id: 1,
@@ -28,7 +10,13 @@ const selectUsage = async () => {
             id: true,
             name: true,
             email: true,
-            posts: true,
+            posts: {
+                select: {
+                    id: true,
+                    title: true,
+                    content: true,
+                },
+            },
         },
     });
 

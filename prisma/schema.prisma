@@ -11,19 +11,31 @@ datasource db {
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
-  email   String  @unique
-  name    String?
-  deleted Boolean @default(false)
-  posts   Post[]
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  name     String?
+  deleted  Boolean   @default(false)
+  posts    Post[]
+  comments Comment[]
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   content   String?
-  published Boolean @default(false)
-  deleted   Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  published Boolean   @default(false)
+  deleted   Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
+  comments  Comment[]
+}
+
+model Comment {
+  id       Int     @id @default(autoincrement())
+  content  String
+  deleted  Boolean @default(false)
+  author   User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int
+  post     Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   Int
 }
